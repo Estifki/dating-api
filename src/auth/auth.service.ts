@@ -1,4 +1,8 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 
 import { User } from 'src/user/schema/user.shema';
@@ -29,5 +33,24 @@ export class AuthService {
       user: user,
     };
     return response;
+  }
+
+  async login(signInBody) {
+    const { username, password } = signInBody;
+
+    const signInUser = await this.userModel.findOne({ username });
+
+    if (!signInUser) {
+      throw new UnauthorizedException('Incorrect Email or Password');
+    }
+
+    const isPassword = await bcrypt.compare(password, signInUser.password);
+    if (!isPassword) {
+      throw new UnauthorizedException('Incorrect Email or Password');
+    }
+
+    return {
+      user: signInUser,
+    };
   }
 }
