@@ -53,13 +53,14 @@ export class MatchService {
     if (!validMoogosSenderId) {
       throw new BadRequestException('Sender ID is not correct');
     }
-    const validMoogosreceiverId = mongoose.isValidObjectId(receiverId);
-    if (!validMoogosreceiverId) {
+    const validMoogosReceiverId = mongoose.isValidObjectId(receiverId);
+    if (!validMoogosReceiverId) {
       throw new BadRequestException('Receiver ID is not correct');
     }
 
     // Retrieve the full userInfo of the sender
-    const sender = await this.userModel.findById(senderId).exec();
+    const sender = await this.userModel.findById(senderId);
+
     if (!sender) {
       throw new NotFoundException('Sender not found');
     }
@@ -73,10 +74,17 @@ export class MatchService {
       throw new NotFoundException('Receiver not found');
     }
 
-    const matchRequest = this.matchRequestModel.create({
-      ...sender,
-      receiverId: receiver,
+    // Create and save the match request
+    const matchRequest = await this.matchRequestModel.create({
+      sender,
+      receiverId: receiverId, // Use the actual receiverId, not the receiver document
     });
-    return { message: 'Match Request Sent Sucessfully', data: matchRequest };
+
+    return { message: 'Match Request Sent Successfully', data: matchRequest };
+  }
+
+
+  async getMatchRequests(){
+    
   }
 }
