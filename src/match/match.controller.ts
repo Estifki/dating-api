@@ -5,6 +5,10 @@ import { MatchService } from './match.service';
 export class MatchController {
   constructor(private readonly matchService: MatchService) {}
 
+  @Get('/possibleMatch/:id')
+  async getMyMatchs(@Param('id') id: string) {
+    return this.matchService.possibleMatchs(id);
+  }
   @Post()
   async sendMatchRequest(
     @Body('senderId') senderId: string,
@@ -12,9 +16,9 @@ export class MatchController {
   ) {
     return this.matchService.sendMatchRequest(senderId, receiverId);
   }
-
-  @Get(':id')
-  async getMyMatchs(@Param('id') id: string) {
-    return this.matchService.possibleMatchs(id);
+  @Get('/matchRequest/:id')
+  async getMatchRequest(@Param('id') id: string) {
+    return this.matchService.getMatchRequests(id);
   }
+
 }

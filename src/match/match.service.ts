@@ -76,15 +76,32 @@ export class MatchService {
 
     // Create and save the match request
     const matchRequest = await this.matchRequestModel.create({
-      sender,
-      receiverId: receiverId, // Use the actual receiverId, not the receiver document
+      sender: senderId,
+      receiver: receiverId, // Use the actual receiverId, not the receiver document
     });
 
     return { message: 'Match Request Sent Successfully', data: matchRequest };
   }
 
+  async getMatchRequests(userId: string) {
+    const validMoogosId = mongoose.isValidObjectId(userId);
+    if (!validMoogosId) {
+      throw new BadRequestException('UserId is not correct');
+    }
 
-  async getMatchRequests(){
-    
+    // Find all match requests that match the receiverId and userId,
+    // and populate the 'sender' field with sender information
+    const matchRequests = await this.matchRequestModel
+      .find({ receiverId: userId })
+      .populate('sender') // Specify the field to populate
+      .exec();
+
+    if (matchRequests.length === 0) {
+      return {
+        message: 'You Have No Match Request',
+      };
+    }
+
+    return matchRequests;
   }
 }

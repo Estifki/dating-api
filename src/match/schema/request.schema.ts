@@ -8,7 +8,7 @@ export class MatchRequest {
   sender: User;
 
   @Prop()
-  receiverId: string;
+  receiver: string;
 }
 
 export const matchRequestSchema = SchemaFactory.createForClass(MatchRequest);
