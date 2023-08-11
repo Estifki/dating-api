@@ -3,6 +3,7 @@ import { MatchService } from './match.service';
 import { MatchController } from './match.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { userSchema } from 'src/user/schema/user.shema';
+import { matchRequestSchema } from './schema/request.schema';
 
 @Module({
   imports: [
@@ -10,6 +11,13 @@ import { userSchema } from 'src/user/schema/user.shema';
       {
         name: 'User',
         schema: userSchema,
+      },
+    ]),
+
+    MongooseModule.forFeature([
+      {
+        name: 'MatchRequest',
+        schema: matchRequestSchema,
       },
     ]),
   ],

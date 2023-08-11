@@ -8,6 +8,22 @@ export class UserService {
   constructor(@InjectModel('User') private userModel: Model<User>) {}
 
   async getAllUsers() {
-    return await this.userModel.find();
+    const users = await this.userModel.find();
+
+    if (users.length === 0) {
+      return {
+        message: 'User table is empty',
+      };
+    }
+
+    return users;
+  }
+
+  async deleteAllUsers() {
+    await this.userModel.deleteMany();
+    return {
+      message: 'All Users Deleted',
+      users: await this.userModel.find(),
+    };
   }
 }

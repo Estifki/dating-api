@@ -1,4 +1,10 @@
-import { IsArray, IsEnum, IsNotEmpty, IsString, MinLength } from 'class-validator';
+import {
+  IsArray,
+  IsEnum,
+  IsNotEmpty,
+  IsString,
+  MinLength,
+} from 'class-validator';
 import { Gender } from 'src/utils/emuns/gender.enum';
 
 export class SignUpDto {
@@ -26,13 +32,12 @@ export class SignUpDto {
   @IsEnum(Gender)
   gender: Gender;
 
-  
   @IsNotEmpty()
   @IsArray()
   hobbies: string[];
-
-  @IsString()
-  profilepic: string;
+  // @IsNotEmpty()
+  // @IsArray()
+  // images: string[];
 
   @IsNotEmpty()
   @IsString()

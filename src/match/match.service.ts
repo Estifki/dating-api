@@ -12,6 +12,8 @@ export class MatchService {
   constructor(
     @InjectModel('User')
     private userModel: Model<User>,
+    @InjectModel('MatchRequest')
+    private matchRequestModel: Model<User>,
   ) {}
 
   async possibleMatchs(userId: string) {
@@ -44,5 +46,37 @@ export class MatchService {
       .exec();
 
     return matchingUsers;
+  }
+
+  async sendMatchRequest(senderId: string, receiverId: string) {
+    const validMoogosSenderId = mongoose.isValidObjectId(senderId);
+    if (!validMoogosSenderId) {
+      throw new BadRequestException('Sender ID is not correct');
+    }
+    const validMoogosreceiverId = mongoose.isValidObjectId(receiverId);
+    if (!validMoogosreceiverId) {
+      throw new BadRequestException('Receiver ID is not correct');
+    }
+
+    // Retrieve the full userInfo of the sender
+    const sender = await this.userModel.findById(senderId).exec();
+    if (!sender) {
+      throw new NotFoundException('Sender not found');
+    }
+
+    // Retrieve only the id of the receiver
+    const receiver = await this.userModel
+      .findById(receiverId)
+      .select('_id')
+      .exec();
+    if (!receiver) {
+      throw new NotFoundException('Receiver not found');
+    }
+
+    const matchRequest = this.matchRequestModel.create({
+      ...sender,
+      receiverId: receiver,
+    });
+    return { message: 'Match Request Sent Sucessfully', data: matchRequest };
   }
 }

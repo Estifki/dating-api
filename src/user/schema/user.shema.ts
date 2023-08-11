@@ -4,6 +4,14 @@ import { Gender } from 'src/utils/emuns/gender.enum';
 
 // export type UserDocument = HydratedDocument<User>
 
+@Schema()
+class PropertyImages {
+  @Prop()
+  url: string;
+}
+
+const PropertyImagesSchema = SchemaFactory.createForClass(PropertyImages);
+
 @Schema({
   timestamps: true,
 })
@@ -23,14 +31,14 @@ export class User extends Document {
   @Prop({ isRequired: true })
   bio: string;
 
-  @Prop({required:true})
+  @Prop({ required: true })
   gender: Gender;
 
   @Prop({ required: true, type: [String] })
   hobbies: string[];
 
-  @Prop()
-  profilepic: string;
+  @Prop([PropertyImagesSchema])
+  images: PropertyImages[];
 
   @Prop({ isRequired: true })
   password: string;
