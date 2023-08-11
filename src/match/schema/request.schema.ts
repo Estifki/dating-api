@@ -4,8 +4,8 @@ import { User } from 'src/user/schema/user.shema';
 
 @Schema({ timestamps: true })
 export class MatchRequest {
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' })
-  sender: User;
+  @Prop()
+  sender: string;
 
   @Prop()
   receiver: string;
