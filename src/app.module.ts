@@ -20,6 +20,6 @@ import { CloudinaryProvider } from './cloudinary/cloudinary.provider';
     CloudinaryModule,
   ],
   controllers: [AppController],
-  providers: [AppService, CloudinaryProvider, CloudinaryService],
+  providers: [AppService],
 })
 export class AppModule {}

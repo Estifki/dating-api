@@ -35,15 +35,21 @@ export class MatchService {
     }
     const matchingUsers = await this.userModel
       .find({
-        id: { $ne: currentUser._id }, // Exclude the current user
-        gender: matchGender, // Match users with opposite gender
+        id: { $ne: currentUser._id },
+        gender: matchGender,
         hobbies: {
           $exists: true,
           $not: { $size: 0 },
-          $in: currentUser.hobbies,
-        }, // Match users with at least one common hobby
+          $in: currentUser.hobbies.map((hobby) => new RegExp(hobby, 'i')),
+        },
       })
       .exec();
+
+    if (matchingUsers.length === 0) {
+      return {
+        message: 'You Have No Match',
+      };
+    }
 
     return matchingUsers;
   }
